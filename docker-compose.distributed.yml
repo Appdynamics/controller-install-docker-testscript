@@ -1,0 +1,79 @@
+version: "2"
+
+services:
+  appd-ec:
+    container_name: appd-ec
+    build:
+      context: "ec"
+    expose:
+      - '9191'
+    ports:
+      - "9191:9191"
+    networks:
+      - app-net
+#    volumes:
+#      - "./logs/ec:/home/appdynamics/platform/platform-admin/logs"
+    environment:
+      CONTROLLER_HOST: 'appd-controller'
+    entrypoint: /home/appdynamics/entrypoint.distributed.sh
+
+  appd-controller:
+    container_name: "appd-controller"
+    build:
+      context: "controller"
+    privileged: true                           
+    ports:
+      - "8090:8090"
+    depends_on:
+      - appd-ec
+    networks:
+      - app-net
+#    volumes:
+#      - "./logs/controller:/home/appdynamics/platform/product/controller/logs"
+
+  appd-event-01:
+    container_name: "appd-event-01"
+    build:
+      context: "event"
+    privileged: true
+    ports:
+      - "9080-9081"
+#      - "9300-9400"
+    depends_on:
+      - appd-ec
+    networks:
+      - app-net
+#    volumes:
+#      - "./logs/event-01:/home/appdynamics/platform/product/events-service/processor/logs"
+
+  appd-loadbalancer:
+    container_name: "appd-loadbalancer"
+    build:
+      context: "loadbalancer"
+    networks:
+      - app-net
+    ports:
+      - "9080:9080"
+    depends_on:
+      - appd-event-01
+
+
+  appd-eum:
+    container_name: "appd-eum"
+    build:
+      context: "eum"
+    networks:
+      - app-net
+    ports: 
+      - "7001:7001"
+      - "7002:7002"
+    depends_on:
+      - appd-loadbalancer
+    privileged: true                           
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  logs:

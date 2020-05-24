@@ -1,0 +1,17 @@
+version: "2"
+
+services:
+  appd-ec:
+    container_name: appd-ec
+    build:
+      context: "ec"
+    ports:
+      - "9191:9191"
+      - "8090:8090"
+      - "9080:9080"
+#    volumes:
+#      - "./logs/ec:/home/appdynamics/platform/platform-admin/logs"
+    entrypoint: /home/appdynamics/entrypoint.ec.sh
+
+volumes:
+  logs:

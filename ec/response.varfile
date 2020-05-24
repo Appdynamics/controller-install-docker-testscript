@@ -1,0 +1,13 @@
+serverHostName=host.docker.internal
+sys.languageId=en
+disableEULA=true
+
+platformAdmin.port=9191
+platformAdmin.databasePort=3377
+platformAdmin.dataDir=/home/appdynamics/platform/mysql/data
+platformAdmin.databasePassword=admin
+platformAdmin.databaseRootPassword=admin
+platformAdmin.adminPassword=admin
+platformAdmin.useHttps$Boolean=false
+sys.installationDir=/home/appdynamics/platform
+
